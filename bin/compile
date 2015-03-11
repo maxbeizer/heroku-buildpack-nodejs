@@ -55,6 +55,21 @@ install_npm
 
 head "Building dependencies"
 cd $build_dir
+
+if [ -d $cache_dir/node/node_modules/gulp ]; then
+status "Copying gulp from cache"
+  cp -r $cache_dir/node/node_modules/gulp $build_dir/node_modules
+  cp -r $cache_dir/node/node_modules/.bin/gulp $build_dir/node_modules/.bin
+fi
+(
+  if [ -f $build_dir/gulpfile.js ]; then
+    npm install gulp 2>&1
+    $build_dir/node_modules/.bin/gulp build
+  else
+    status "No gulpfile found"
+  fi
+)
+
 build_dependencies
 
 ####### Create a Procfile if possible
